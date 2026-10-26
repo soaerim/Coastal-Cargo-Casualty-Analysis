@@ -1,14 +1,18 @@
-# Coastal Cargo Vessel Casualty Analysis
+# Marine Accident Human Casualty Analysis in Korean Waters
 
-**연구 주제: 내항화물선 해양사고의 인명피해 발생 및 피해 심각도 관련요인 분석: 단계별 위험구조와 사고유형 민감도를 중심으로
-**작성자 : 소애림
-**언어 / Language: [한국어](#한국어-안내) · [English](#english-documentation)
+**연구 제목:** 국내 해역에서 발생한 해양사고의 인명피해 발생 및 피해심각도 관련요인 분석: 일반화물선·유조선·예인선·부선을 중심으로
+
+**English title:** Factors Associated with Human Casualty Occurrence and Severity in Marine Accidents in Korean Waters: A Study of General Cargo Ships, Tankers, Tugboats, and Barges
+
+**작성자:** 소애림
+
+**언어 / Language:** [한국어](#한국어-안내) · [English](#english-documentation)
 
 ## 한국어 안내
 
 ### 1. 저장소 소개
 
-본 저장소는 "2014~2023년 국내 내항화물선 해양사고"를 대상으로 인명피해의 발생 여부와 피해 심각도 관련요인을 분석한 연구의 "Stata 분석 코드(do-file)"를 공개하기 위한 공간입니다. 
+본 저장소는 2014~2023년 국내 해역에서 발생한 일반화물선·유조선·예인선·부선 관련 해양사고의 인명피해 발생 및 피해심각도 관련요인 분석에 사용한 Stata 코드(do-file)를 공개합니다. 
 연구에 사용된 자료 처리 방식, 모형 사양, 사고유형별 교차표 및 민감도 분석 절차를 문서화하여 분석의 투명성과 검증 가능성을 높이고자 합니다.
 
 본 저장소에는 해양사고 원자료 또는 분석용 Excel 파일은 중앙해양안전심판원 자료이므로 따로 포함되어 있지 않습니다. 코드를 독립적으로 실행하려면 이용 권한이 있는 호환 원자료가 필요합니다. 
@@ -26,7 +30,7 @@
 | 통계분석 | 이항 로지스틱 회귀분석, 부분비례승산모형(PPO), 사고유형 교차분석 및 민감도 분석 |
 | 표준오차 | 사고번호 기준 군집강건표준오차(cluster-robust standard errors) |
 
-하나의 사고 사건에 복수의 선박이 포함될 수 있으므로, 분석단위인 선박-사고 관측치의 수는 고유 사고 사건의 수와 다를 수 있습니다.
+하나의 사고 사건에 복수의 선박이 포함될 수 있으므로, 분석단위인 선박-사고 관측치의 수는 고유 사고 사건의 수와 다를 수 있습니다. **선박의 국적과 내항·외항 운송사업 등록 여부는 표본 선정 기준이 아니며, 외국적 선박도 포함됩니다.**
 
 ### 3. 파일 구성
 
@@ -35,7 +39,11 @@
 | [coastal_casualty_Analysis(261025).do](./coastal_casualty_Analysis%28261025%29.do) | 자료 불러오기, 변수 생성, 기초통계, 사고유형 교차표, 회귀모형, PPO 및 축약모형 추정 등을 수행하는 통합 분석 코드 |
 | README.md | 연구 개요와 변수 정의, 분석방법, 실행 방법 및 데이터 공개 범위 안내 |
 
-do-file에는 각 분석의 목적, 변수의 기준범주와 모형 해석 시 주의사항을 한글 주석으로 작성하였습니다.
+do-file에는 각 분석의 목적, 변수의 기준범주와 모형 해석 시 주의사항을 한글 주석으로 작성하였습니다. 분석 코드는 선종이 이미 표준화된 Excel 분석자료를 입력받으며, 그 이전의 원자료 정비 과정을 전부 실행하지는 않습니다.
+
+#### 선종 표준화 기준
+
+전체 원자료 정비 단계에서 기존 '기타선(부선)' **226건**을 부선으로 통합하였습니다. 또한 '기타선' 중 **단일선박 사건이며 사건명에서 하나의 선종이 명확히 확인되는 경우**에 한하여 부선 **188건**, 예인선 **4건**으로 재분류하였고, 복수선박 사건 등 식별이 불확실한 사례는 원분류를 유지하였습니다. 이는 **전체 원자료 기준 전처리 건수**로, 최종 국내 해역 분석표본 3,144건에 포함된 재분류 건수와는 구분됩니다. 해당 표준화는 제공된 do-file을 실행하기 전에 완료된 작업입니다.
 
 ### 4. 주요 종속변수
 
@@ -45,7 +53,7 @@ do-file에는 각 분석의 목적, 변수의 기준범주와 모형 해석 시 
 | **severity** | 0 = 인명피해 없음 / 1 = 부상 / 2 = 사망·실종 |
 | **fatal** | 인명피해 발생 사례에 한정하여 0 = 부상 / 1 = 사망·실종 |
 
-하나의 관측치에서 복수 유형의 인명피해가 발생한 경우에는 "가장 높은 피해심각도"를 기준으로 분류합니다.
+인명피해는 사고사건 전체를 연루 선박에 중복 배분하지 않고 **해당 선박에 귀속된 사망·실종·부상자 수**를 기준으로 구성하였습니다. 하나의 선박-사고 관측치에서 복수 유형의 인명피해가 발생한 경우에는 가장 높은 피해심각도를 적용합니다.
 
 ### 5. 분석모형
 
@@ -129,11 +137,11 @@ Stata의 **estimates table** 출력은 기본적으로 로그오즈(log-odds) �
 
 원자료를 제공하지 않으므로, 저장소의 코드만으로 모든 분석을 즉시 재현할 수 있는 것은 아닙니다. 다만 **변수 정의, 모형 사양, 기대 표본 수, 분석 절차 및 출력 구조**를 공개하여 검증 가능성을 높이고자 합니다.
 
-아울러 분석 결과는 **이미 발생하여 기록된 사고의 인명피해 결과에 대한 관련성**을 나타냅니다. 운항시간·운항거리·운항횟수 등 사고 노출량을 직접 고려하지 못했으므로 선박의 사고 발생률이나 특정 요인의 인과적 효과로 해석해서는 안 됩니다. Model 2와 안전사고 제외 분석은 결과 사건 수가 적어 추정의 불확실성에 유의해야 합니다.
+아울러 분석 결과는 **이미 발생하여 기록된 사고의 인명피해 결과에 대한 관련성**을 나타냅니다. 운항시간·운항거리·운항횟수 등 사고 노출량을 직접 고려하지 못했으므로 선박의 사고 발생률이나 특정 요인의 인과적 효과로 해석해서는 안 됩니다. Model 2는 부선의 개별 계수가 유의하더라도 전체 Wald 검정은 유의하지 않았습니다(p=0.332). 안전사고 제외 모형의 인명피해 발생 사례도 56건에 불과하므로, 두 분석은 탐색적으로 해석해야 합니다. 선박국적과 운항형태 등의 차이를 충분히 통제하지 못한 점도 연구의 한계입니다.
 
 ### 9. 논문 및 코드 인용
 
-**연구 제목(원고):** 「내항화물선 해양사고의 인명피해 발생 및 피해 심각도 관련요인 분석: 단계별 위험구조와 사고유형 민감도를 중심으로」
+**연구 제목(원고):** 「국내 해역에서 발생한 해양사고의 인명피해 발생 및 피해심각도 관련요인 분석: 일반화물선·유조선·예인선·부선을 중심으로」
 
 저널명, 권·호, 페이지 및 DOI는 **논문 게재 확정 후 추가할 예정**입니다. 현재 코드를 인용하거나 확인할 때는 다음 저장소 주소를 사용합니다.
 
@@ -150,9 +158,9 @@ https://github.com/soaerim/Coastal-Cargo-Casualty-Analysis
 
 ## English documentation
 
-**Reproducible Stata code for analyzing human casualty occurrence and severity in coastal cargo vessel accidents in Korean waters (2014–2023)**
+**Reproducible Stata code for human casualty occurrence and severity in marine accidents in Korean waters (2014–2023)**
 
-This repository contains the analysis code associated with a research manuscript on factors associated with human casualty occurrence and casualty severity in accidents involving coastal cargo vessels in Korean waters.
+This repository contains Stata analysis code associated with the manuscript, *Factors Associated with Human Casualty Occurrence and Severity in Marine Accidents in Korean Waters: A Study of General Cargo Ships, Tankers, Tugboats, and Barges*. The study covers recorded accidents involving general cargo ships, tankers, tugboats, and barges in Korean waters, **including foreign-flagged vessels**. Neither vessel flag nor registration as a domestic shipping operator was used to select observations.
 
 The code is provided to document the data-processing decisions, model specifications, supplementary analyses, and estimation procedures. **The underlying accident-level dataset is not included in this repository.** Consequently, independent execution requires authorized access to the corresponding dataset.
 
@@ -166,7 +174,7 @@ The code is provided to document the data-processing decisions, model specificat
 - **Casualty outcomes:** 2,867 records with no human casualty, 187 injury records, and 90 death/missing records
 - **Statistical approach:** Binary logistic regression and a partial proportional odds (PPO) model, supplemented by cross-tabulations and sensitivity analyses
 
-The estimates describe **associations among recorded vessel–accident observations**, not causal effects or population-level accident rates. In particular, the analysis does not include a denominator for vessel exposure, such as operating hours, voyages, or distance traveled.
+The estimates describe **associations among recorded vessel–accident observations**, not causal effects or population-level accident rates. In particular, the analysis does not include an exposure denominator (operating hours, voyages, or distance traveled), or full controls for vessel flag and domestic/international service type.
 
 ## Repository contents
 
@@ -175,7 +183,11 @@ The estimates describe **associations among recorded vessel–accident observati
 | [`coastal_casualty_Analysis(261025).do`](./coastal_casualty_Analysis%28261025%29.do) | Integrated Stata analysis: data preparation, descriptive statistics, accident-type cross-tabulations, primary models, and reduced-model sensitivity analyses |
 | `README.md` | Documentation of the research code and execution requirements |
 
-The do-file contains detailed **Korean-language comments** explaining the variable definitions and individual analysis steps.
+The do-file contains **Korean-language comments** explaining variable definitions and analysis steps. It imports an already standardized analysis workbook and does not independently reconstruct the original vessel-type recoding.
+
+### Vessel-type harmonization before analysis
+
+In the upstream source-data processing, **226** records originally labeled `기타선(부선)` were grouped as barges. Among records labeled `기타선`, **188** were recoded as barges and **4** as tugboats only where a single-vessel accident record and the accident title identified one vessel type unambiguously; ambiguous multi-vessel cases retained their original category. These counts refer to the **broader source-data harmonization**, not the final 3,144-record analytical sample. This upstream procedure is **not executed by the published do-file**.
 
 ## Outcome definitions
 
@@ -187,7 +199,7 @@ The source workbook contains three related outcome variables:
 | `severity` | 0 = no human casualty; 1 = injury; 2 = death/missing |
 | `fatal` | Among casualty-positive observations: 0 = injury; 1 = death/missing |
 
-Where more than one casualty outcome is recorded for a vessel–accident observation, the severity classification represents the most severe outcome.
+Casualty counts are assigned to the **respective vessel**, not duplicated from the whole accident event across all involved vessels. Where more than one casualty outcome is recorded for a vessel–accident observation, severity reflects the most severe outcome.
 
 ## Analysis specifications
 
@@ -277,11 +289,11 @@ When execution completes successfully, the do-file writes these files into the `
 
 The analytical dataset is not included in this public repository. Availability of the underlying Korean maritime accident records and permission to redistribute derived datasets must be assessed under the relevant data-provider terms and institutional requirements.
 
-The script documents the analysis workflow but **code availability alone does not constitute full data-and-code reproducibility**. Running the script requires a compatible, lawfully obtained input workbook. The expected sample totals and model specifications are documented above to facilitate independent checks.
+The script documents the modeling workflow, starting with an already standardized analysis workbook, but **code availability alone does not constitute full raw-data preprocessing or data-and-code reproducibility**. Running the script requires a compatible, lawfully obtained input workbook. The expected sample totals and model specifications are documented above to facilitate independent checks.
 
 ## Citation and manuscript information
 
-This repository is intended to accompany a research manuscript concerning casualty occurrence and severity in Korean coastal cargo vessel accidents. **The final journal citation and DOI should be added after publication.**
+This repository accompanies the manuscript, *Factors Associated with Human Casualty Occurrence and Severity in Marine Accidents in Korean Waters: A Study of General Cargo Ships, Tankers, Tugboats, and Barges*. **The final journal citation and DOI will be added after publication.**
 
 When referencing the analysis code before publication, please link to this repository:
 
@@ -295,7 +307,7 @@ For a fixed, citable software version, consider creating a GitHub release after 
 
 ## Limitations
 
-These analyses are based on **recorded accidents**, not on all vessel operations. Consequently, findings concern the relative severity of observed accident outcomes rather than the probability of an accident occurring during a voyage. Model 2 and the safety-excluded models also contain relatively few outcome events, so their coefficients and confidence intervals should be interpreted cautiously.
+These analyses are based on **recorded accidents**, not on all vessel operations. Consequently, findings concern the relative severity of observed accident outcomes rather than the probability of an accident occurring during a voyage. Model 2 (273 observations; 90 death/missing outcomes) was not significant in the overall Wald test (p=0.332) despite a significant individual barge coefficient. The safety-excluded regression contains only 56 casualty-positive observations. These analyses should therefore be interpreted as exploratory. Differences by vessel flag, service type, and working conditions were not fully controlled.
 
 ---
 
