@@ -88,6 +88,12 @@ do-file에는 각 분석의 목적, 변수의 기준범주와 모형 해석 시 
 
 축약모형은 **각 전체모형과 동일한 완전사례 표본**에서 추정합니다. 단, 전체모형의 04:00–08:00 시간대는 **08:00–12:00 대비**, Reduced B는 **그 외 모든 시간대 대비**이므로 두 시간대 오즈비를 같은 기준으로 직접 비교해서는 안 됩니다.
 
+#### 예인선·부선 관련 11건의 추가 민감도 분석
+
+사고명에 예인선과 부선이 함께 등장하지만 동일 사고번호의 구조화된 선박 기록이 한 건뿐인 **11개 관측치**를 확인했습니다. 통합 do-file은 기존 다선박 변수를 영구적으로 변경하지 않고, 이 11건만 임시로 다선박 사고로 재분류한 뒤 **Model 1과 Model 1-S를 원래의 완전사례 표본에서 다시 추정**합니다.
+
+다선박 사고의 오즈비는 **Model 1: 0.166 → 0.183**, **Model 1-S: 0.967 → 1.040**으로 나타났습니다. 추가 결과는 원자료를 이용한 별도의 독립 재계산으로 확인했으며, 공개된 do-file의 Stata 실행 결과와 로그는 별도로 확인해야 합니다. 이 추가 분석은 PPO 모형을 재추정하는 절차가 아닙니다.
+
 ### 6. 실행 환경 및 방법
 
 **필요한 환경**
@@ -143,11 +149,11 @@ Stata의 **estimates table** 출력은 기본적으로 로그오즈(log-odds) �
 
 **연구 제목(원고):** 「국내 해역에서 발생한 해양사고의 인명피해 발생 및 피해심각도 관련요인 분석: 일반화물선·유조선·예인선·부선을 중심으로」
 
-저널명, 권·호, 페이지 및 DOI는 **논문 게재 확정 후 추가할 예정**입니다. 현재 코드를 인용하거나 확인할 때는 다음 저장소 주소를 사용합니다.
+논문은 게재 승인되었으며, 최종 권·호·페이지 및 학술논문 DOI가 확인되면 서지정보를 추가할 예정입니다. 현재 코드를 인용하거나 확인할 때는 다음 저장소 주소를 사용합니다.
 
 https://github.com/soaerim/Coastal-Cargo-Casualty-Analysis
 
-향후 최종 투고·게재 버전을 확정하면 GitHub **Release**를 생성하여 분석 코드의 버전을 고정하는 것을 권장합니다.
+코드의 Stata 실행 검증 후 GitHub **Release**를 생성하고 Zenodo에서 해당 코드 버전의 DOI를 발급받을 예정입니다.
 
 **논문에 활용 가능한 코드 공개 문구**
 
@@ -241,6 +247,10 @@ The original full models include vessel type, log gross tonnage, multi-vessel in
 
 **Important:** The full model compares 04:00–08:00 with 08:00–12:00, whereas Reduced B compares 04:00–08:00 with all other time periods. Those two time coefficients do **not** represent identical contrasts.
 
+### Additional 11-record tugboat–barge classification check
+
+Eleven vessel–accident observations mention both a tugboat and a barge in the accident title while only one vessel is recorded under that accident ID. The do-file temporarily reclassifies these observations as multi-vessel accidents and re-estimates Models 1 and 1-S on their **original complete-case samples**, without changing the underlying dataset. The multi-vessel odds ratios were **0.166 → 0.183** (Model 1) and **0.967 → 1.040** (Model 1-S). These results were independently cross-checked; the Stata execution and log still require verification in Stata. This check does not re-estimate the PPO model.
+
 ## Software requirements
 
 - **Stata 15.1 or later**, as declared in the do-file.
@@ -293,7 +303,7 @@ The script documents the modeling workflow, starting with an already standardize
 
 ## Citation and manuscript information
 
-This repository accompanies the manuscript, *Factors Associated with Human Casualty Occurrence and Severity in Marine Accidents in Korean Waters: A Study of General Cargo Ships, Tankers, Tugboats, and Barges*. **The final journal citation and DOI will be added after publication.**
+This repository accompanies the manuscript, *Factors Associated with Human Casualty Occurrence and Severity in Marine Accidents in Korean Waters: A Study of General Cargo Ships, Tankers, Tugboats, and Barges*. **The manuscript has been accepted; final journal citation details and the article DOI will be added when available.**
 
 When referencing the analysis code before publication, please link to this repository:
 
