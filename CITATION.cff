@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this research code, please cite this software repository or its archived Zenodo version."
+type: software
+title: "Human Casualty Occurrence and Severity in Marine Accidents in Korean Waters: Stata Analysis Code"
+authors:
+  - family-names: So
+    given-names: Ae-Rim
+repository-code: "https://github.com/soaerim/Coastal-Cargo-Casualty-Analysis"
+url: "https://github.com/soaerim/Coastal-Cargo-Casualty-Analysis"
+abstract: >-
+  Stata analysis code for vessel-accident observations involving general cargo
+  ships, tankers, tugboats, and barges in Korean waters (2014-2023). Includes
+  casualty occurrence and severity models, accident-type sensitivity checks,
+  parsimonious specifications, and the supplementary 11-record tugboat-barge
+  classification sensitivity analysis. The underlying analysis data are not
+  redistributed with the software.
+keywords:
+  - maritime safety
+  - marine accidents
+  - human casualty
+  - Stata
+  - logistic regression
+  - partial proportional odds
