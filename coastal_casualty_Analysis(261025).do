@@ -566,6 +566,9 @@ logistic casualty_any ib1.ship_type_n c.ln_gt ib0.multi_vessel ib3.time_n ib1.se
 
 estimates store M1
 
+* Save original complete-case sample for 11-case audit.
+gen byte sample_M1_full = e(sample)
+
 * 총톤수가 2배 증가할 때의 오즈비
 * exp(lnGT 계수 × ln(2))
 
@@ -786,6 +789,49 @@ tab multi_vessel casualty_any if sample_M1S_full == 1, row
 testparm i.ship_type_n
 
 
+*==============================================================================
+* 12.1 11개 예인선-부선 경계사례 재분류 민감도 분석
+*==============================================================================
+* 선박정보 한 척, 사고명에 예인선 및 부선이 함께 있는 사례 11건.
+* 다선박 여부만 임시 변경하며 기존 모형, 원자료 및 출력용 데이터는 보존.
+* 반드시 원래 Model 1 / Model 1-S 완전사례 표본으로 재추정.
+*==============================================================================
+
+estimates restore M1
+scalar m1_original_or = exp(_b[1.multi_vessel])
+estimates restore M1S
+scalar m1s_original_or = exp(_b[1.multi_vessel])
+
+preserve
+
+bysort case_id_raw: gen long n_records_per_case = _N if !missing(case_id_raw)
+gen byte reclass_tugbarge11 = (multi_vessel == 0 & n_records_per_case == 1 & strpos(case_name, "예인선") > 0 & strpos(case_name, "부선") > 0) if !missing(case_id_raw, case_name, multi_vessel)
+quietly count if reclass_tugbarge11 == 1
+assert r(N) == 11
+list case_id_raw case_name vessel_name ship_type if reclass_tugbarge11 == 1, noobs abbreviate(24)
+replace multi_vessel = 1 if reclass_tugbarge11 == 1
+
+display as result "MODEL 1: original sample, 11-case reclassification"
+logistic casualty_any ib1.ship_type_n c.ln_gt ib0.multi_vessel ib3.time_n ib1.season_n ib1.area_n c.year if sample_M1_full == 1, vce(cluster case_id)
+assert e(N) == 3079
+scalar m1_recode_or = exp(_b[1.multi_vessel])
+estimates store M1_recode11
+
+display as result "MODEL 1-S: original sample, 11-case reclassification"
+logistic casualty_any ib1.ship_type_n c.ln_gt ib0.multi_vessel ib3.time_n ib1.season_n ib1.area_n c.year if sample_M1S_full == 1, vce(cluster case_id)
+assert e(N) == 2847
+scalar m1s_recode_or = exp(_b[1.multi_vessel])
+estimates store M1S_recode11
+
+restore
+
+display as result "--------------------------------------------------------------"
+display as result "11-case audit: Model 1 original and recoded OR: " %7.3f scalar(m1_original_or) " -> " %7.3f scalar(m1_recode_or)
+display as result "11-case audit: Model 1-S original and recoded OR: " %7.3f scalar(m1s_original_or) " -> " %7.3f scalar(m1s_recode_or)
+display as result "Expected: Model 1 0.166 -> 0.183; Model 1-S 0.967 -> 1.040"
+display as result "--------------------------------------------------------------"
+
+*==============================================================================
 *==============================================================================
 * 13. Model 2 축약모형
 *==============================================================================
